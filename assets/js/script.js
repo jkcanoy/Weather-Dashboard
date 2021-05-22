@@ -6,6 +6,7 @@ var tempEl = document.getElementById("temperature");
 var humEl = document.getElementById("humidity");
 var windEl = document.getElementById("wind-speed");
 var uviEl = document.getElementById("UVI");
+var forecastCards = document.getElementById("forecast");
 
 var searchBtnEl = document.getElementById("search-button");
 var searchEl = document.getElementById("city-search");
@@ -71,21 +72,26 @@ function getWeather(searchEl) {
         })
         .then(function (forecastData) {
             console.log(forecastData);
-            var forecastResults = response.list
+            var forecastResults = forecastData.list;
         // append 5 day forecast to HTML
-            for (var i = 0; i < forecastResults.length; i += 8) {
-                var forecastDiv = $('<div class="card text-white bg-primary m-auto">')
+            for (var i = 0; i < forecastResults.length; i +=8) {
+                var forecastDiv = $('<div class="card text-white bg-primary m-auto" style="width:8rem; height: 10rem;">');
 
                 var dateData = forecastResults[i].dt_txt;
                 var formatDate = dateData.substr(0,10);
                 var tempData = forecastResults[i].main.temp;
                 var humData = forecastResults[i].main.humidity;
 
-                var foreDate = $('<h5 class="card-title">').text(formatDate)
-                var foreTemp = $('<p class="card-text">').text("Temp: " + tempData + "°F")
-                var foreHum = $('<p class="card-text">').text("Hum: " + humData + "%")
-            }
+                var foreDate = $('<h5 class="card-title">').text(formatDate);
+                var foreTemp = $('<p class="card-text">').text("Temp: " + tempData + "°F");
+                var foreHum = $('<p class="card-text">').text("Hum: " + humData + "%");
 
+                // append items
+                forecastDiv.append(foreDate);
+                forecastDiv.append(foreTemp);
+                forecastDiv.append(foreHum);
+                $("#forecast").append(forecastDiv);
+            }
         })
     });
 }
