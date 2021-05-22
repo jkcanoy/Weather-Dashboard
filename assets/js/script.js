@@ -15,8 +15,25 @@ var searchEl = document.getElementById("city-search");
 searchBtnEl.addEventListener("click", function (event) {
   event.preventDefault();
   getWeather(searchEl);
-  console.log(searchEl.value);
+  // save to local storage
+  var cityInput = searchEl.value.trim();
+  var storeArr = [];
+  storeArr.push(cityInput);
+  localStorage.setItem("cityName:", JSON.stringify(storeArr));
+
+  cityHistory();
 });
+
+// get items from local storage
+function cityHistory() {
+  var lastCity = JSON.parse(localStorage.getItem("cityName:"));
+  var historyDiv = $(
+    '<button type="button" class="btn btn-outline-primary"></button>'
+  ).text(lastCity);
+  var olderSearch = $("#searchHistory");
+  olderSearch.append(historyDiv);
+  // $("#searchHistory").prepend(olderSearch)
+}
 // Current weather data function
 function getWeather(searchEl) {
   var currentURL =
@@ -68,30 +85,38 @@ function getWeather(searchEl) {
         "&units=imperial";
       fetch(forecastURL)
         .then(function (response) {
-            return response.json();
+          return response.json();
         })
         .then(function (forecastData) {
-            console.log(forecastData);
-            var forecastResults = forecastData.list;
-        // append 5 day forecast to HTML
-            for (var i = 0; i < forecastResults.length; i +=8) {
-                var forecastDiv = $('<div class="card text-white bg-primary m-auto" style="width:8rem; height: 10rem;">');
+          console.log(forecastData);
+          var forecastResults = forecastData.list;
+          // append 5 day forecast to HTML
+          $("#forecast").html("");
+          
+          for (var i = 0; i < forecastResults.length; i += 8) {
+            var forecastDiv = $(
+              '<div class="card text-white bg-primary m-auto" style="width:8rem; height: 10rem;">'
+            );
 
-                var dateData = forecastResults[i].dt_txt;
-                var formatDate = dateData.substr(0,10);
-                var tempData = forecastResults[i].main.temp;
-                var humData = forecastResults[i].main.humidity;
+            var dateData = forecastResults[i].dt_txt;
+            var formatDate = dateData.substr(0, 10);
+            var tempData = forecastResults[i].main.temp;
+            var humData = forecastResults[i].main.humidity;
 
-                var foreDate = $('<h5 class="card-title">').text(formatDate);
-                var foreTemp = $('<p class="card-text">').text("Temp: " + tempData + "°F");
-                var foreHum = $('<p class="card-text">').text("Hum: " + humData + "%");
+            var foreDate = $('<h5 class="card-title">').text(formatDate);
+            var foreTemp = $('<p class="card-text">').text(
+              "Temp: " + tempData + "°F"
+            );
+            var foreHum = $('<p class="card-text">').text(
+              "Hum: " + humData + "%"
+            );
 
-                // append items
-                forecastDiv.append(foreDate);
-                forecastDiv.append(foreTemp);
-                forecastDiv.append(foreHum);
-                $("#forecast").append(forecastDiv);
-            }
-        })
+            // append items
+            forecastDiv.append(foreDate);
+            forecastDiv.append(foreTemp);
+            forecastDiv.append(foreHum);
+            $("#forecast").append(forecastDiv);
+          }
+        });
     });
 }
