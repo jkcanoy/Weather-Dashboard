@@ -33,8 +33,8 @@ function getWeather(searchEl) {
       var currentDate = moment().format("L");
       // append currentData to html
       cityEl.innerHTML = currentData.name + " " + currentDate;
-      tempEl.innerHTML = currentData.main.temp;
-      humEl.innerHTML = currentData.main.humidity;
+      tempEl.innerHTML = currentData.main.temp + "°F";
+      humEl.innerHTML = currentData.main.humidity + "%";
       windEl.innerHTML = currentData.wind.speed;
       // fetch UVI
       var uviURL =
@@ -73,7 +73,18 @@ function getWeather(searchEl) {
             console.log(forecastData);
             var forecastResults = response.list
         // append 5 day forecast to HTML
-            for (var i = 0; i < forecastResults.length; i += 8)
+            for (var i = 0; i < forecastResults.length; i += 8) {
+                var forecastDiv = $('<div class="card text-white bg-primary m-auto">')
+
+                var dateData = forecastResults[i].dt_txt;
+                var formatDate = dateData.substr(0,10);
+                var tempData = forecastResults[i].main.temp;
+                var humData = forecastResults[i].main.humidity;
+
+                var foreDate = $('<h5 class="card-title">').text(formatDate)
+                var foreTemp = $('<p class="card-text">').text("Temp: " + tempData + "°F")
+                var foreHum = $('<p class="card-text">').text("Hum: " + humData + "%")
+            }
 
         })
     });
