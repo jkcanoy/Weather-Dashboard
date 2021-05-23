@@ -12,7 +12,7 @@
 <body>
     <div class="jumbotron jumbotron-fluid text-center">
         <div class="container">
-          <i class="fas fa-rainbow">Weather Dashboard</i>
+          <span class="title"><i class="fas fa-rainbow"></i>Weather Dashboard</span>
         </div>
     </div>
     <div class="container">
@@ -31,6 +31,7 @@
                 <div class="card row">
                     <div class="col-sm-12">
                         <h3 id="current-city"></h3>
+                        <img id="icon" src="" alt="weather icon">
                         <p>Temperature:
                             <span id="temperature"></span>
                         </p>
@@ -46,7 +47,7 @@
                     </div>
                 </div>
                 <br>
-                <h2>5-Day Forecast</h2>
+                <h2 class="forecastTitle">5-Day Forecast</h2>
                 <div id="forecast" class="row">
 
                 </div>

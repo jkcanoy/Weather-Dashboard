@@ -6,7 +6,7 @@ var tempEl = document.getElementById("temperature");
 var humEl = document.getElementById("humidity");
 var windEl = document.getElementById("wind-speed");
 var uviEl = document.getElementById("UVI");
-var forecastCards = document.getElementById("forecast");
+var iconEl = document.getElementById("icon");
 
 var searchBtnEl = document.getElementById("search-button");
 var searchEl = document.getElementById("city-search");
@@ -19,21 +19,28 @@ searchBtnEl.addEventListener("click", function (event) {
   var cityInput = searchEl.value.trim();
   var storeArr = [];
   storeArr.push(cityInput);
-  localStorage.setItem("cityName:", JSON.stringify(storeArr));
+  localStorage.setItem("cityName", JSON.stringify(storeArr));
 
   cityHistory();
 });
 
 // get items from local storage
 function cityHistory() {
-  var lastCity = JSON.parse(localStorage.getItem("cityName:"));
+  var lastCity = JSON.parse(localStorage.getItem("cityName"));
   var historyDiv = $(
-    '<button type="button" class="btn btn-outline-primary"></button>'
+    '<button type="button" class="btn btn-outline-primary" style="width: 100%;"></button>'
   ).text(lastCity);
-  var olderSearch = $("#searchHistory");
+  var olderSearch = $("<div>");
   olderSearch.append(historyDiv);
-  // $("#searchHistory").prepend(olderSearch)
+  $("#searchHistory").prepend(olderSearch);
 }
+
+// history event listener
+// $("#searchHistory").addEventListener("click", function (event) {
+//     preventDefault()
+
+//     getWeather(lastCity);
+// })
 // Current weather data function
 function getWeather(searchEl) {
   var currentURL =
@@ -50,6 +57,9 @@ function getWeather(searchEl) {
       console.log(currentData);
       var currentDate = moment().format("L");
       // append currentData to html
+      var iconData = currentData.weather[0].icon;
+      var iconURL = "http://openweathermap.org/img/w/" + iconData + ".png";
+      iconEl.setAttribute("src", iconURL);
       cityEl.innerHTML = currentData.name + " " + currentDate;
       tempEl.innerHTML = currentData.main.temp + "°F";
       humEl.innerHTML = currentData.main.humidity + "%";
@@ -69,12 +79,21 @@ function getWeather(searchEl) {
           console.log(uviData);
 
           // append uvi
-          uviEl.innerHTML = uviData.current.uvi;
-          // uvi colors
-          // var uviBadge = document.getElementsByClassName("badge")
-          //     if (data.current.uvi.value = 0 && data.current.uvi.value < 3){
-          //         uviBadge.className += " badge-success"
-          //     }
+          uviVal = uviData.current.uvi;
+          uviEl.innerHTML = uviVal;
+          //   uvi colors
+          var uviBadge = $(".badge");
+          if (uviVal >= 0 && uviVal < 2) {
+            uviBadge.addClass(" badge-success");
+          } else if (uviVal >= 2 && uviVal < 5) {
+            uviBadge.addClass(" badge-warning");
+          } else if (uviVal >= 5 && uviVal < 7) {
+            uviBadge.addClass(" badge-orange");
+          } else if (uviVal >= 7 && uviVal < 10) {
+            uviBadge.addClass(" badge-danger");
+          } else {
+            uviBadge.addClass(" badge-violet");
+          }
         });
 
       // 5day forecast fetch
@@ -92,11 +111,15 @@ function getWeather(searchEl) {
           var forecastResults = forecastData.list;
           // append 5 day forecast to HTML
           $("#forecast").html("");
-          
+
           for (var i = 0; i < forecastResults.length; i += 8) {
             var forecastDiv = $(
               '<div class="card text-white bg-primary m-auto" style="width:8rem; height: 10rem;">'
             );
+
+            var iconData = forecastResults[i].weather[0].icon
+            var iconURL =
+              "http://openweathermap.org/img/w/" + iconData + ".png";
 
             var dateData = forecastResults[i].dt_txt;
             var formatDate = dateData.substr(0, 10);
@@ -104,6 +127,7 @@ function getWeather(searchEl) {
             var humData = forecastResults[i].main.humidity;
 
             var foreDate = $('<h5 class="card-title">').text(formatDate);
+            var foreIcon = $('<img>').attr("src", iconURL);
             var foreTemp = $('<p class="card-text">').text(
               "Temp: " + tempData + "°F"
             );
@@ -113,6 +137,7 @@ function getWeather(searchEl) {
 
             // append items
             forecastDiv.append(foreDate);
+            forecastDiv.append(foreIcon);
             forecastDiv.append(foreTemp);
             forecastDiv.append(foreHum);
             $("#forecast").append(forecastDiv);
