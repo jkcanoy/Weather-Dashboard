@@ -36,10 +36,9 @@ function cityHistory() {
 }
 
 // history event listener
-// $("#searchHistory").addEventListener("click", function (event) {
-//     preventDefault()
-
-//     getWeather(lastCity);
+// searchEl.on("click", ".btn", function(event) {
+//   event.preventDefault();
+//   getWeather($(this.text()))
 // })
 // Current weather data function
 function getWeather(searchEl) {
@@ -84,15 +83,15 @@ function getWeather(searchEl) {
           //   uvi colors
           var uviBadge = $(".badge");
           if (uviVal >= 0 && uviVal < 2) {
-            uviBadge.addClass(" badge-success");
+            uviBadge.attr("class", "badge badge-success");
           } else if (uviVal >= 2 && uviVal < 5) {
-            uviBadge.addClass(" badge-warning");
+            uviBadge.attr("class", "badge badge-warning");
           } else if (uviVal >= 5 && uviVal < 7) {
-            uviBadge.addClass(" badge-orange");
+            uviBadge.attr("class", "badge badge-orange");
           } else if (uviVal >= 7 && uviVal < 10) {
-            uviBadge.addClass(" badge-danger");
+            uviBadge.attr("class", "badge badge-danger");
           } else {
-            uviBadge.addClass(" badge-violet");
+            uviBadge.attr("class", "badge badge-violet");
           }
         });
 
@@ -117,7 +116,7 @@ function getWeather(searchEl) {
               '<div class="card text-white bg-primary m-auto" style="width:8rem; height: 10rem;">'
             );
 
-            var iconData = forecastResults[i].weather[0].icon
+            var iconData = forecastResults[i].weather[0].icon;
             var iconURL =
               "http://openweathermap.org/img/w/" + iconData + ".png";
 
@@ -127,7 +126,7 @@ function getWeather(searchEl) {
             var humData = forecastResults[i].main.humidity;
 
             var foreDate = $('<h5 class="card-title">').text(formatDate);
-            var foreIcon = $('<img>').attr("src", iconURL);
+            var foreIcon = $("<img>").attr("src", iconURL);
             var foreTemp = $('<p class="card-text">').text(
               "Temp: " + tempData + "°F"
             );
