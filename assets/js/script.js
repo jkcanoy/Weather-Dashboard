@@ -82,9 +82,9 @@ function getWeather(searchEl) {
           uviEl.innerHTML = uviVal;
           //   uvi colors
           var uviBadge = $(".badge");
-          if (uviVal >= 0 && uviVal < 2) {
+          if (uviVal >= 0 && uviVal < 3) {
             uviBadge.attr("class", "badge badge-success");
-          } else if (uviVal >= 2 && uviVal < 5) {
+          } else if (uviVal >= 3 && uviVal < 5) {
             uviBadge.attr("class", "badge badge-warning");
           } else if (uviVal >= 5 && uviVal < 7) {
             uviBadge.attr("class", "badge badge-orange");
